@@ -1,6 +1,6 @@
 use anchor_lang::{prelude::*, solana_program::hash::hash};
 
-use crate::{Project, ProjectError, MAX_DESCRIPTION_LEN, MAX_NAME_LEN};
+use crate::{Project, ProjectError, MAX_DESCRIPTION_LEN, MAX_NAME_LEN, MAX_URL_LEN};
 
 #[derive(Accounts)]
 #[instruction(project_id: u64)]
@@ -33,6 +33,8 @@ pub fn _intialize_project(
         description.len() <= MAX_DESCRIPTION_LEN,
         ProjectError::InvalidDescriptionLength
     );
+
+    require!(url.len() <= MAX_URL_LEN, ProjectError::InvalidUrlLength);
 
     let owner = &ctx.accounts.owner;
     let project_account_pda_bump = ctx.bumps.project_account_pda;

@@ -6,6 +6,8 @@ pub enum ProjectError {
     InvalidProjectNameLength,
     #[msg("Invalid description length")]
     InvalidDescriptionLength,
+    #[msg("Invalid url length")]
+    InvalidUrlLength,
 }
 
 #[error_code]

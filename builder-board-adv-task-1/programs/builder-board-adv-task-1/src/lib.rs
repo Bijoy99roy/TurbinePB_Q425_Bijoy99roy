@@ -23,7 +23,7 @@ pub mod builder_board_adv_task_1 {
     }
 
     pub fn upvote_project(ctx: Context<UpvoteProject>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
+        _upvote_project(ctx)?;
         Ok(())
     }
 }
