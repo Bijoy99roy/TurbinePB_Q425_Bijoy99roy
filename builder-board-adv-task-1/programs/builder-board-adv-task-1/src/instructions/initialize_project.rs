@@ -1,16 +1,16 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::hash::hash};
 
 use crate::{Project, ProjectError, MAX_DESCRIPTION_LEN, MAX_NAME_LEN};
 
 #[derive(Accounts)]
-#[instruction(project_id: String)]
+#[instruction(project_id: u64)]
 pub struct InitializeProject<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
     #[account(
         init,
         space= 8 + Project::INIT_SPACE,
-        seeds = [b"projects", owner.key().as_ref(), project_id.as_bytes()],
+        seeds = [b"projects", owner.key().as_ref(), &project_id.to_le_bytes()[..]],
         bump,
         payer=owner
     )]
@@ -20,7 +20,7 @@ pub struct InitializeProject<'info> {
 
 pub fn _intialize_project(
     ctx: Context<InitializeProject>,
-    project_id: String,
+    project_id: u64,
     project_name: String,
     url: String,
     description: String,

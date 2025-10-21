@@ -13,12 +13,12 @@ pub mod builder_board_adv_task_1 {
 
     pub fn initialize_project(
         ctx: Context<InitializeProject>,
-        project_id: String,
+        project_id: u64,
         project_name: String,
         url: String,
         description: String,
     ) -> Result<()> {
-        _intialize_project(ctx, project_id, project_name, url, description);
+        _intialize_project(ctx, project_id, project_name, url, description)?;
         Ok(())
     }
 

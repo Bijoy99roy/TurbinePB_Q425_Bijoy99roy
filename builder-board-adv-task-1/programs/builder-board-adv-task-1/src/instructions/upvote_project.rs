@@ -8,7 +8,7 @@ pub struct UpvoteProject<'info> {
     pub user: Signer<'info>,
     #[account(
         mut,
-        seeds = [b"projects", project_account_pda.owner.key().as_ref(), project_account_pda.project_id.as_bytes()],
+        seeds = [b"projects", project_account_pda.owner.key().as_ref(), &project_account_pda.project_id.to_be_bytes()[..]],
         bump=project_account_pda.bump,
     )]
     pub project_account_pda: Account<'info, Project>,

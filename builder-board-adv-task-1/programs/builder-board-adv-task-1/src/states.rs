@@ -10,8 +10,7 @@ pub struct Project {
     pub owner: Pubkey,
     pub upvotes: u64,
     pub bump: u8,
-    #[max_len(36)]
-    pub project_id: String,
+    pub project_id: u64,
     #[max_len(MAX_NAME_LEN)]
     pub project_name: String,
     #[max_len(MAX_DESCRIPTION_LEN)]
@@ -24,7 +23,7 @@ impl Project {
     pub fn initialization(
         &mut self,
         owner: Pubkey,
-        project_id: String,
+        project_id: u64,
         project_name: String,
         description: String,
         url: String,
