@@ -37,7 +37,6 @@ describe("builder-board-adv-task-1", () => {
   async function prepareUpvote(
     projectId: anchor.BN, 
     projectOwnerPubkey: anchor.web3.PublicKey,
-    projectAccountPdaKey: anchor.web3.PublicKey,
     userPubkey: anchor.web3.PublicKey
   ){
     const projectAccountPdaSeed = [
@@ -47,10 +46,9 @@ describe("builder-board-adv-task-1", () => {
     ]
 
     const {pda: projectAccountPda} = await getPda(projectAccountPdaSeed);
-
     const upvotePdaSeed = [
       Buffer.from("upvote"),
-      projectAccountPdaKey.toBuffer(),
+      projectAccountPda.toBuffer(),
       userPubkey.toBuffer()
     ]
     const {pda: upvotePda} = await getPda(upvotePdaSeed);
@@ -82,6 +80,7 @@ describe("builder-board-adv-task-1", () => {
     const description = "A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium.";
     const githubUrl = "https://github.com/Bijoy99roy/AMM";
     const projectAccountPda = await prepareProject(projectId, projectOwner.publicKey);
+    console.log(projectAccountPda)
     await program.methods.initializeProject(
       projectId, 
       projectName, 
@@ -100,5 +99,134 @@ describe("builder-board-adv-task-1", () => {
     assert.equal(project.description, description, `Expected description value to be ${description}`)
     assert.equal(project.url, githubUrl, `Expected url value to be ${githubUrl}`)
     assert.equal(project.upvotes.toString(), "0", `Expected upvotes value to be 0`)
+  });
+
+  it("Create a project, Fails for invalid project name length", async () => {
+    const projectId = new anchor.BN(2);
+    const projectName = "A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium.";
+    const description = "A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium.";
+    const githubUrl = "https://github.com/Bijoy99roy/AMM";
+    const projectAccountPda = await prepareProject(projectId, projectOwner.publicKey);
+    try{
+      await program.methods.initializeProject(
+      projectId, 
+      projectName, 
+      githubUrl, 
+      description)
+      .accounts({
+        owner: projectOwner.publicKey,
+        projectAccountPda
+      })
+      .signers([projectOwner])
+      .rpc();
+    } catch(err) {
+      const anchorError = err as anchor.AnchorError;
+      assert.equal(anchorError.error.errorCode.code, "InvalidProjectNameLength")
+      assert.equal(anchorError.error.errorMessage, "Invalid project name length")
+    }
+    
+  });
+
+  it("Create a project, Fails for invalid description length", async () => {
+    const projectId = new anchor.BN(3);
+    const projectName = "AMM";
+    const description = "A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium. A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium. A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium. A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium.";
+    const githubUrl = "https://github.com/Bijoy99roy/AMM";
+    const projectAccountPda = await prepareProject(projectId, projectOwner.publicKey);
+    try{
+      await program.methods.initializeProject(
+      projectId, 
+      projectName, 
+      githubUrl, 
+      description)
+      .accounts({
+        owner: projectOwner.publicKey,
+        projectAccountPda
+      })
+      .signers([projectOwner])
+      .rpc();
+    } catch(err) {
+      const anchorError = err as anchor.AnchorError;
+      assert.equal(anchorError.error.errorCode.code, "InvalidDescriptionLength")
+      assert.equal(anchorError.error.errorMessage, "Invalid description length")
+    }
+    
+  });
+
+  it("Create a project, Fails for invalid url length", async () => {
+    const projectId = new anchor.BN(4);
+    const projectName = "AMM";
+    const description = "A simple implementation of a Constant Product Automated Market Maker (CP-AMM), inspired by Raydium.";
+    const githubUrl = "https://github.com/Bijoy99roy/AMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM";
+    console.log(githubUrl.length)
+    const projectAccountPda = await prepareProject(projectId, projectOwner.publicKey);
+    try{
+      await program.methods.initializeProject(
+      projectId, 
+      projectName, 
+      githubUrl, 
+      description)
+      .accounts({
+        owner: projectOwner.publicKey,
+        projectAccountPda
+      })
+      .signers([projectOwner])
+      .rpc();
+    } catch(err) {
+      const anchorError = err as anchor.AnchorError;
+      assert.equal(anchorError.error.errorCode.code, "InvalidUrlLength")
+      assert.equal(anchorError.error.errorMessage, "Invalid url length")
+    }
+    
+  });
+
+  it("Upvote a project", async ()=>{
+    const projectId = new anchor.BN(1);
+    const {projectAccountPda, upvotePda} = await prepareUpvote(projectId, projectOwner.publicKey, user.publicKey);
+    console.log(projectAccountPda)
+    console.log(upvotePda)
+    console.log(projectOwner.publicKey)
+    console.log(user.publicKey)
+    await program.methods.upvoteProject()
+    .accounts({
+      user: user.publicKey,
+      projectAccountPda,
+      upvotePda
+    })
+    .signers([user])
+    .rpc();
+    const project = await program.account.project.fetch(projectAccountPda);
+    const upvote = await program.account.upvote.fetch(upvotePda);
+    console.log(project)
+    console.log(upvote)
+    assert.equal(project.upvotes.toString(), "1", "Expected upvotes value to be 1")
+    assert.equal(upvote.project.toString(), projectAccountPda.toString(), `Expected project value to be ${projectAccountPda.toString()}`)
+    assert.equal(upvote.user.toString(), user.publicKey.toString(), `Expected user value to be ${user.publicKey.toString()}`)
+
+  });
+
+  it("Upvote a project, Fails to same user votes more than once", async ()=>{
+    const projectId = new anchor.BN(1);
+    const {projectAccountPda, upvotePda} = await prepareUpvote(projectId, projectOwner.publicKey, user.publicKey);
+    console.log(projectAccountPda)
+    console.log(upvotePda)
+    console.log(projectOwner.publicKey)
+    console.log(user.publicKey)
+    try{
+      await program.methods.upvoteProject()
+    .accounts({
+      user: user.publicKey,
+      projectAccountPda,
+      upvotePda
+    })
+    .signers([user])
+    .rpc();
+    } catch(err) {
+      const anchorError = err as anchor.AnchorError;
+      console.log(anchorError)
+      assert.equal(anchorError.error.errorCode.code, "AlreadyVoted")
+      assert.equal(anchorError.error.errorMessage, "User has already voted the project")
+    }
+    
   });
 });
