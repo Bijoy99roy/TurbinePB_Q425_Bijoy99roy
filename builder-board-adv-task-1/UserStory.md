@@ -8,7 +8,7 @@ Our platform allows anyone to post their project on-chain and receive upvotes fr
 **Product-Market Fit:**
 
 At the moment most of the project sharing platforms are centralized, That means votes, visibility can be modified from company side or lost if platform shuts down.
-Our platform addressed these issues by offering an on-chain leaderboard that allows every upvote to be public, verifiable and immutable. It creates an sense of trust by making everything transparent and creates and healthy environment for indie developers, opensource contributors to gain recognition from the community directly.
+Our platform addressed these issues by offering an on-chain leaderboard that allows every upvote to be public, verifiable and immutable. It creates a sense of trust by making everything transparent and creates a healthy environment for indie developers and  opensource contributors to gain recognition from the community directly.
 
 **Target User Profiles:**
 
@@ -44,6 +44,7 @@ Our platform addressed these issues by offering an on-chain leaderboard that all
 - The input while filling form should be validated (Non-empty field & valid URL)
 
 **4. Priority: High**
+
 **5. Technical Notes (For Developers)**
 **Dependencies:**
 - The program needs to be hooked with a frontend built on React.js with wallet adapter
@@ -69,6 +70,7 @@ As a Tech Community Manager, I want to be involved in supporting new emerging to
 **User Interaction:**
 - The user can upvote any project that he likes
 - The user can see the leaderboard and the ranking of the projects
+
 **Security:**
 - The platform should ensure no double voting is taking place.
 
