@@ -24,7 +24,7 @@ pub struct UpvoteProject<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn _upvote_project(ctx: Context<UpvoteProject>) -> Result<()> {
+pub fn _upvote_project(ctx: Context<UpvoteProject>, project_id: u64) -> Result<()> {
     let upvote_pda = &mut ctx.accounts.upvote_pda;
     let project_account_pda = &mut ctx.accounts.project_account_pda;
     let user = &ctx.accounts.user;
@@ -32,6 +32,7 @@ pub fn _upvote_project(ctx: Context<UpvoteProject>) -> Result<()> {
     if upvote_pda.user == Pubkey::default() {
         upvote_pda.project = project_account_pda.key();
         upvote_pda.user = user.key();
+        upvote_pda.project_id = project_id;
         project_account_pda.upvotes = project_account_pda.upvotes.checked_add(1).unwrap();
     } else {
         return Err(UpvoteError::AlreadyVoted.into());

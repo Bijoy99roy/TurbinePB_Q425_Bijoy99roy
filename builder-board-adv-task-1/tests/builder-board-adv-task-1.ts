@@ -187,7 +187,7 @@ describe("builder-board-adv-task-1", () => {
     console.log(upvotePda)
     console.log(projectOwner.publicKey)
     console.log(user.publicKey)
-    await program.methods.upvoteProject()
+    await program.methods.upvoteProject(projectId)
     .accounts({
       user: user.publicKey,
       projectAccountPda,
@@ -213,7 +213,7 @@ describe("builder-board-adv-task-1", () => {
     console.log(projectOwner.publicKey)
     console.log(user.publicKey)
     try{
-      await program.methods.upvoteProject()
+      await program.methods.upvoteProject(projectId)
     .accounts({
       user: user.publicKey,
       projectAccountPda,

@@ -44,5 +44,6 @@ impl Project {
 #[derive(InitSpace)]
 pub struct Upvote {
     pub project: Pubkey,
+    pub project_id: u64,
     pub user: Pubkey,
 }

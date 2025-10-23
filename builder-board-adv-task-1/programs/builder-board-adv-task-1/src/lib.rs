@@ -5,7 +5,7 @@ use anchor_lang::prelude::*;
 pub use errors::*;
 pub use instructions::*;
 pub use states::*;
-declare_id!("q91M8vdEPnwWN66doxJ9XBxTJiYfjUuUa3cNWoQWEa9");
+declare_id!("8CC5vhrbP2v5thEG4Lwy7QsUqa2gCmeSzUbu5j4jJC4C");
 
 #[program]
 pub mod builder_board_adv_task_1 {
@@ -22,8 +22,8 @@ pub mod builder_board_adv_task_1 {
         Ok(())
     }
 
-    pub fn upvote_project(ctx: Context<UpvoteProject>) -> Result<()> {
-        _upvote_project(ctx)?;
+    pub fn upvote_project(ctx: Context<UpvoteProject>, project_id: u64) -> Result<()> {
+        _upvote_project(ctx, project_id)?;
         Ok(())
     }
 }
