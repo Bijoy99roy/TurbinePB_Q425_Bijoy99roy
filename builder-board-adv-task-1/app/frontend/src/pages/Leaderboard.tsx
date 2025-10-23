@@ -15,6 +15,7 @@ import { getPda } from "../anchorUtils/handlePda";
 import { toast } from "sonner";
 import ConnectWalletNotice from "../components/ConnectWalletNotice";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
+import Loader from "../components/Loader";
 
 type BuilderBoardProjects = {
     owner: anchor.web3.PublicKey;
@@ -28,6 +29,7 @@ type BuilderBoardProjects = {
 
 export function Leaderboard() {
     const [allProjects, setAllProjects] = useState<anchor.ProgramAccount<BuilderBoardProjects>[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const [userUpvotesSet, setUserUpvotesSet] = useState<Set<number>>(new Set());
     const wallet = useAnchorWallet();
@@ -53,6 +55,7 @@ export function Leaderboard() {
     useEffect(() => {
         if (!program) return;
         (async () => {
+            setLoading(true)
             const allProjects = await fetchAllProjects(program);
             const allUpvotes = await fetchUserVotedAccounts(program, wallet?.publicKey);
             console.log(allUpvotes);
@@ -66,6 +69,7 @@ export function Leaderboard() {
             const upvotesSet = new Set(allUpvotes.map(u => u.account.projectId.toNumber()));
             setUserUpvotesSet(upvotesSet);
             console.log(userUpvotesSet.has(3))
+            setLoading(false)
         })();
     }, [program])
 
@@ -119,7 +123,7 @@ export function Leaderboard() {
         <div className="min-h-screen flex flex-col ">
             <Navbar wallet={wallet} />
             <section className="flex-1 container mx-auto px-4 my-20 py-10">
-                <Card>
+                {loading ? <Loader /> : <Card>
                     <CardHeader className="text-center space-y-2">
                         <CardTitle className="text-4xl">
                             All Projects
@@ -223,6 +227,7 @@ export function Leaderboard() {
                         }
                     </CardContent>
                 </Card>
+                }
             </section>
         </div >
     )
