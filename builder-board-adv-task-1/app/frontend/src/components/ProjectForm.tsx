@@ -33,20 +33,32 @@ export function ProjectForm() {
     }
 
     const wallet = useAnchorWallet();
-    if (!wallet) return null;
-    const provider = new anchor.AnchorProvider(connection, wallet, {
-        preflightCommitment: commitmentLevel,
-    });
+    // if (!wallet) return null;
 
-    /* create the program interface combining the idl, and provider */
-    const program = new Program(
-        builderBoardProgramInterface,
-        provider
-    ) as Program<BuilderBoardAdvTask1>;
+    const provider = wallet
+        ? new anchor.AnchorProvider(connection, wallet, { preflightCommitment: commitmentLevel })
+        : null;
+
+    const program = wallet && provider
+        ? new Program(builderBoardProgramInterface, provider) as Program<BuilderBoardAdvTask1>
+        : null;
+    // const provider = new anchor.AnchorProvider(connection, wallet, {
+    //     preflightCommitment: commitmentLevel,
+    // });
+
+    // /* create the program interface combining the idl, and provider */
+    // const program = new Program(
+    //     builderBoardProgramInterface,
+    //     provider
+    // ) as Program<BuilderBoardAdvTask1>;
 
     async function submitProject(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+        if (!wallet || !program) {
+            toast.error("Please connect your wallet first.");
+            return;
+        }
+        setLoading(true)
         // Use backend api to get unique nonce for each project
         // const responseNonce = await incrementNonce()
         // console.log(responseNonce)
@@ -138,6 +150,7 @@ export function ProjectForm() {
 
                             <div className="flex gap-6">
                                 <Button className="flex-1 py-6 text-lg cursor-pointer"
+                                    disabled={loading}
                                     type="submit">
                                     {loading ? "PUBLISHING..." : "PUBLISH"}
                                 </Button>
