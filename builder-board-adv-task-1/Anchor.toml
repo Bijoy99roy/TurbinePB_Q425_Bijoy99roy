@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-builder_board_adv_task_1 = "q91M8vdEPnwWN66doxJ9XBxTJiYfjUuUa3cNWoQWEa9"
+builder_board_adv_task_1 = "8CC5vhrbP2v5thEG4Lwy7QsUqa2gCmeSzUbu5j4jJC4C"
 
 [registry]
 url = "https://api.apr.dev"

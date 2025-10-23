@@ -9,12 +9,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { Leaderboard } from './pages/Leaderboard';
 import WalletContextProvider from './components/WalletProvider';
+import { Toaster } from 'sonner';
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <WalletContextProvider>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
