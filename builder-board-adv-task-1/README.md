@@ -58,3 +58,19 @@ solana-test-validator
 
 anchor deploy
 ```
+
+**Devnet Deployment**
+Inside Anchor.toml replace [programs.localnet] to [programs.devnet] and replace cluster = "localnet" under [provider] to cluster = "devnet"
+```bash
+solana config set --url devnet
+anchor deploy
+```
+
+
+### Contributing
+
+- Fork the repository
+- Create your feature branch
+- Commit your changes
+- Push to the branch
+- Open a Pull Request
