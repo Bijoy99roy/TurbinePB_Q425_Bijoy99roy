@@ -121,7 +121,7 @@ export function Leaderboard() {
     }
     return (
         <div className="min-h-screen flex flex-col ">
-            <Navbar wallet={wallet} />
+            <Navbar />
             <section className="flex-1 container mx-auto px-4 my-20 py-10">
                 {loading ? <Loader /> : <Card>
                     <CardHeader className="text-center space-y-2">

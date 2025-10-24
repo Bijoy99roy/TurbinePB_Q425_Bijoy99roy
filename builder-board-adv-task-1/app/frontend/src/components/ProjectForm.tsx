@@ -8,7 +8,6 @@ import { Button } from "./ui/button";
 import { Program } from "@coral-xyz/anchor";
 import { builderBoardProgramInterface, commitmentLevel, connection } from "../api/constants";
 import * as anchor from "@coral-xyz/anchor";
-import { fetchAllProjects } from "../anchorUtils/projects";
 import { incrementNonce } from "../services/handlePdaNonce";
 import { getPda } from "../anchorUtils/handlePda";
 import { useNavigate } from "react-router-dom";
@@ -60,14 +59,14 @@ export function ProjectForm() {
         }
         setLoading(true)
         // Use backend api to get unique nonce for each project
-        // const responseNonce = await incrementNonce()
+        const responseNonce = await incrementNonce()
         // console.log(responseNonce)
 
         const projectName = formData.name;
         const description = formData.description;
         const projectUrl = formData.url;
 
-        const nonce = new anchor.BN(5)
+        const nonce = new anchor.BN(responseNonce)
         const projectAccountPdaSeed = [
             Buffer.from("projects"),
             wallet?.publicKey.toBuffer(),

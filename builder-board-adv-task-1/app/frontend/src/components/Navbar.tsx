@@ -1,7 +1,7 @@
-import type { AnchorWallet } from "@solana/wallet-adapter-react";
+
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Link } from "react-router-dom";
-export function Navbar({ wallet }: { wallet?: AnchorWallet }) {
+export function Navbar() {
     return (
         <nav className="fixed left-0 top-0 right-0 z-50 border-b shadow-accent">
             <div className="w-full p-4 mx-auto">
