@@ -183,10 +183,6 @@ describe("builder-board-adv-task-1", () => {
   it("Upvote a project", async ()=>{
     const projectId = new anchor.BN(1);
     const {projectAccountPda, upvotePda} = await prepareUpvote(projectId, projectOwner.publicKey, user.publicKey);
-    console.log(projectAccountPda)
-    console.log(upvotePda)
-    console.log(projectOwner.publicKey)
-    console.log(user.publicKey)
     await program.methods.upvoteProject(projectId)
     .accounts({
       user: user.publicKey,
@@ -197,8 +193,6 @@ describe("builder-board-adv-task-1", () => {
     .rpc();
     const project = await program.account.project.fetch(projectAccountPda);
     const upvote = await program.account.upvote.fetch(upvotePda);
-    console.log(project)
-    console.log(upvote)
     assert.equal(project.upvotes.toString(), "1", "Expected upvotes value to be 1")
     assert.equal(upvote.project.toString(), projectAccountPda.toString(), `Expected project value to be ${projectAccountPda.toString()}`)
     assert.equal(upvote.user.toString(), user.publicKey.toString(), `Expected user value to be ${user.publicKey.toString()}`)
@@ -208,10 +202,6 @@ describe("builder-board-adv-task-1", () => {
   it("Upvote a project, Fails to same user votes more than once", async ()=>{
     const projectId = new anchor.BN(1);
     const {projectAccountPda, upvotePda} = await prepareUpvote(projectId, projectOwner.publicKey, user.publicKey);
-    console.log(projectAccountPda)
-    console.log(upvotePda)
-    console.log(projectOwner.publicKey)
-    console.log(user.publicKey)
     try{
       await program.methods.upvoteProject(projectId)
     .accounts({
@@ -223,7 +213,6 @@ describe("builder-board-adv-task-1", () => {
     .rpc();
     } catch(err) {
       const anchorError = err as anchor.AnchorError;
-      console.log(anchorError)
       assert.equal(anchorError.error.errorCode.code, "AlreadyVoted")
       assert.equal(anchorError.error.errorMessage, "User has already voted the project")
     }
