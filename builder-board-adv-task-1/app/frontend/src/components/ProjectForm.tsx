@@ -60,13 +60,13 @@ export function ProjectForm() {
         setLoading(true)
         // Use backend api to get unique nonce for each project
         const responseNonce = await incrementNonce()
-        // console.log(responseNonce)
+        console.log(responseNonce)
 
         const projectName = formData.name;
         const description = formData.description;
         const projectUrl = formData.url;
 
-        const nonce = new anchor.BN(responseNonce)
+        const nonce = new anchor.BN(responseNonce.latestId)
         const projectAccountPdaSeed = [
             Buffer.from("projects"),
             wallet?.publicKey.toBuffer(),
